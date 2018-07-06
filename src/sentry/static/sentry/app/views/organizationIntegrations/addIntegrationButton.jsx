@@ -90,7 +90,6 @@ export default class AddIntegrationButton extends React.Component {
     return (
       <Tooltip
         disabled={provider.canAdd}
-        tooltipOptions={{placement: 'left'}}
         title={`Integration cannot be added on Sentry. Enable this integration via the ${provider.name} instance.`}
       >
         <span>
@@ -99,7 +98,7 @@ export default class AddIntegrationButton extends React.Component {
             disabled={!provider.canAdd}
             onClick={() => this.handleAddIntegration(provider)}
           >
-            <span className="icon icon-add" /> {t('Add') + ' ' + provider.metadata.noun}
+            {t('Add %s', provider.metadata.noun)}
           </Button>
         </span>
       </Tooltip>

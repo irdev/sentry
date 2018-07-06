@@ -7,6 +7,7 @@ import {t} from 'app/locale';
 import Button from 'app/components/buttons/button';
 import Confirm from 'app/components/confirm';
 import IntegrationItem from 'app/views/organizationIntegrations/integrationItem';
+import Tooltip from 'app/components/tooltip';
 
 const CONFIGURABLE_FEATURES = ['commits'];
 
@@ -46,7 +47,7 @@ export default class InstalledIntegration extends React.Component {
         message={t(message, integration.provider.key)}
         onConfirm={() => this.props.onDisable(integration)}
       >
-        <Button size="small" icon="icon-trash" />
+        <Button size="xsmall" icon="icon-trash" />
       </Confirm>
     );
   }
@@ -61,7 +62,7 @@ export default class InstalledIntegration extends React.Component {
         message={t(message)}
         onConfirm={() => this.props.onRemove()}
       >
-        <Button size="small" icon="icon-trash" />
+        <Button size="xsmall" icon="icon-trash" />
       </Confirm>
     );
   }
@@ -73,21 +74,27 @@ export default class InstalledIntegration extends React.Component {
 
     return (
       <React.Fragment>
-        <PanelItem p={0} py={2} key={integration.id} align="center">
-          <Box px={2} flex={1} style={style}>
-            <IntegrationItem integration={integration} />
+        <PanelItem py={1} px={2} key={integration.id} align="center">
+          <Box flex={1} style={style}>
+            <IntegrationItem compact integration={integration} />
           </Box>
-          {this.hasConfiguration() && (
-            <Box mr={1}>
-              <Button
-                size="small"
-                to={`/settings/${orgId}/integrations/${provider.key}/${integration.id}/`}
-              >
-                {t('Configure')}
-              </Button>
-            </Box>
-          )}
-          <Box mr={1} pr={2}>
+          <Box mr={1}>
+            <Tooltip
+              disabled={this.hasConfiguration()}
+              tooltipOptions={{placement: 'left'}}
+              title="Integration not configurable"
+            >
+              <span>
+                <Button
+                  size="xsmall"
+                  icon="icon-settings"
+                  disabled={!this.hasConfiguration()}
+                  to={`/settings/${orgId}/integrations/${provider.key}/${integration.id}/`}
+                />
+              </span>
+            </Tooltip>
+          </Box>
+          <Box>
             {integration.status === 'active' && integration.provider.key === 'github'
               ? this.renderDisableIntegration(integration)
               : this.renderRemoveIntegration(integration)}
